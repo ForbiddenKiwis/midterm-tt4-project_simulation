@@ -1,18 +1,11 @@
 # Layer 1
-# FROM node:latest AS builder
-# WORKDIR /app
-# COPY ./app/package*.json ./
-# RUN npm install
-# COPY ./app/ ./
-# RUN npm run build 
-# # in the end I have the /dist
-
 FROM node:latest AS builder
 WORKDIR /app
 COPY ./app/package*.json ./
 RUN npm install
 COPY ./app/ ./
 RUN npm run build 
+# in the end I have the /dist
 
 # Layer 2
 FROM debian:bookworm-slim
@@ -38,7 +31,6 @@ COPY --from=builder ./app/dist /var/www/html
 
 #
 COPY ./default.conf /etc/nginx/sites-available/default
-RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/conf.d/default.conf
 
 RUN echo "API_PORT=3000" >> /app/.env
 
